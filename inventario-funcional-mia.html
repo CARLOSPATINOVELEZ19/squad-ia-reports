@@ -67,9 +67,88 @@ tr:hover td{background:var(--cc-teal-light)}
 footer{text-align:center;padding:2rem;color:var(--cc-gray-600);font-size:.8rem;border-top:1px solid var(--cc-gray-200);margin-top:2rem;background:var(--cc-white)}
 footer a{color:var(--cc-green);text-decoration:none;font-weight:500}
 @media(max-width:768px){.header h1{font-size:1.5rem}.header{padding:2rem 1.2rem 1.5rem}.stats{gap:.5rem}.stat-card{min-width:100px;padding:.7rem}.stat-card .num{font-size:1.3rem}.tab-btn{padding:.7rem .8rem;font-size:.75rem}.content{padding:0 1rem}.grid-cards{grid-template-columns:1fr}}
+.hamburger{display:flex;position:fixed;top:12px;left:16px;z-index:1001;background:var(--cc-green);border:none;border-radius:8px;width:44px;height:44px;cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:5px;box-shadow:0 4px 12px rgba(0,166,81,.3);transition:transform .2s,left .3s,top .3s}
+.hamburger:hover{transform:scale(1.05)}
+.hamburger span{display:block;width:22px;height:2.5px;background:#fff;border-radius:2px;transition:all .3s}
+.hamburger.active span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.hamburger.active span:nth-child(2){opacity:0}
+.hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+.hamburger.active{left:248px;top:12px}
+.nav-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:999;opacity:0;transition:opacity .3s}
+.nav-overlay.active{display:block;opacity:1}
+.nav-drawer{position:fixed;top:0;left:-320px;width:300px;max-width:85vw;height:100%;background:var(--cc-white);z-index:1000;overflow-y:auto;transition:left .3s ease;box-shadow:4px 0 24px rgba(0,0,0,.12);padding:0}
+.nav-drawer.active{left:0}
+.nav-drawer-header{background:linear-gradient(135deg,var(--cc-navy),var(--cc-teal));color:#fff;padding:1.5rem 1.2rem;position:sticky;top:0;z-index:1}
+.nav-drawer-header h3{font-size:1rem;font-weight:600;margin:0}
+.nav-drawer-header p{font-size:.75rem;opacity:.7;margin-top:.2rem}
+.nav-drawer ul{list-style:none;padding:.5rem 0;margin:0}
+.nav-drawer li{margin:0}
+.nav-drawer li a{display:flex;align-items:center;gap:.75rem;padding:.85rem 1.2rem;color:var(--cc-gray-800);text-decoration:none;font-size:.88rem;font-weight:500;border-left:3px solid transparent;transition:all .2s}
+.nav-drawer li a:hover,.nav-drawer li a.active{background:var(--cc-teal-light);border-left-color:var(--cc-green);color:var(--cc-navy)}
+.nav-group{border-bottom:1px solid var(--cc-gray-200)}
+.nav-group summary{padding:.7rem 1.2rem;font-size:.72rem;font-weight:700;color:var(--cc-gray-600);text-transform:uppercase;letter-spacing:.05em;cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;transition:background .2s;user-select:none}
+.nav-group summary:hover{background:var(--cc-gray-50)}
+.nav-group summary::after{content:'';width:6px;height:6px;border-right:2px solid var(--cc-gray-600);border-bottom:2px solid var(--cc-gray-600);transform:rotate(-45deg);transition:transform .2s;flex-shrink:0}
+.nav-group[open] summary::after{transform:rotate(45deg)}
+.nav-group summary::-webkit-details-marker{display:none}
+.nav-group .nav-items{padding:0;margin:0;list-style:none}
+.tabs-container{display:none}
 </style>
 </head>
 <body>
+<button class="hamburger" id="hamburgerBtn" aria-label="Abrir menu de navegacion">
+<span></span><span></span><span></span>
+</button>
+<div class="nav-overlay" id="navOverlay"></div>
+<nav class="nav-drawer" id="navDrawer">
+<div class="nav-drawer-header"><h3>MIA Agente IA</h3><p>Navegaci&oacute;n r&aacute;pida</p></div>
+<div>
+<details class="nav-group">
+<summary>Visi&oacute;n General</summary>
+<ul class="nav-items">
+<li><a href="#" data-nav="negocio"><span class="nav-icon">&#128188;</span>Negocio</a></li>
+<li><a href="#" data-nav="equipo"><span class="nav-icon">&#128101;</span>Equipo</a></li>
+<li><a href="#" data-nav="metricas"><span class="nav-icon">&#128200;</span>M&eacute;tricas</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Arquitectura IA</summary>
+<ul class="nav-items">
+<li><a href="#" data-nav="agentes"><span class="nav-icon">&#129302;</span>Agentes</a></li>
+<li><a href="#" data-nav="flujos"><span class="nav-icon">&#128260;</span>Flujos</a></li>
+<li><a href="#" data-nav="tools"><span class="nav-icon">&#128295;</span>Tools</a></li>
+<li><a href="#" data-nav="codigo"><span class="nav-icon">&#128187;</span>C&oacute;digo</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Canales &amp; Campa&ntilde;as</summary>
+<ul class="nav-items">
+<li><a href="#" data-nav="infobip"><span class="nav-icon">&#128241;</span>Infobip</a></li>
+<li><a href="#" data-nav="campanas"><span class="nav-icon">&#128640;</span>Campa&ntilde;as IAValida</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Integraciones &amp; Infra</summary>
+<ul class="nav-items">
+<li><a href="#" data-nav="integraciones"><span class="nav-icon">&#128279;</span>Integraciones</a></li>
+<li><a href="#" data-nav="infra"><span class="nav-icon">&#9729;&#65039;</span>Infraestructura</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Calidad &amp; Gobernanza</summary>
+<ul class="nav-items">
+<li><a href="#" data-nav="reglas"><span class="nav-icon">&#128220;</span>Reglas</a></li>
+<li><a href="#" data-nav="nps"><span class="nav-icon">&#128202;</span>NPS/INS</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Gesti&oacute;n</summary>
+<ul class="nav-items">
+<li><a href="#" data-nav="pendientes"><span class="nav-icon">&#128203;</span>Pendientes</a></li>
+</ul>
+</details>
+</div>
+</nav>
 <div class="header"><div class="header-inner">
 <div class="header-brand"><div class="header-logo">C</div><div><strong style="font-size:1.1rem;letter-spacing:-.01em">ciencuadras</strong><br><span>Servicios Bol&iacute;var S.A.</span></div></div>
 <h1>Inventario Funcional &mdash; MIA Agente IA</h1>
@@ -98,6 +177,7 @@ footer a{color:var(--cc-green);text-decoration:none;font-weight:500}
 <button class="tab-btn" data-tab="infra">&#9729;&#65039; Infraestructura</button>
 <button class="tab-btn" data-tab="infobip">&#128241; Infobip</button>
 <button class="tab-btn" data-tab="nps">&#128202; NPS/INS</button>
+<button class="tab-btn" data-tab="campanas">&#128640; Campa&ntilde;as IAValida</button>
 <button class="tab-btn" data-tab="pendientes">&#128203; Pendientes</button>
 </div></div>
 <div class="content">
@@ -822,6 +902,152 @@ footer a{color:var(--cc-green);text-decoration:none;font-weight:500}
 
 <p style="font-size:.82rem;color:var(--cc-gray-600);margin-top:1.5rem;padding-top:.75rem;border-top:1px solid var(--cc-gray-200)">Base URL Langfuse: <code>https://us.cloud.langfuse.com/project/clx0cgpxa0003q8eb91nh9n6n/traces?search={traceId}&amp;peek={traceId}&amp;timestamp={timestamp}</code> | Infobip: Ir a <a href="https://portal.infobip.com/analyze/logs" target="_blank">Analyze &gt; Logs</a> y buscar por Destination (tel&eacute;fono). El portal no soporta deep links con filtros. | Muestreo: p&aacute;ginas 1,2,5,10,15,20 | Limitaci&oacute;n: 13 de 928K+ sesiones.</p>
 </div></div>
+<div class="tab-panel" id="campanas">
+<div class="card"><h2>Flujo de Campa&ntilde;as WhatsApp &mdash; IAValida</h2>
+<p style="font-size:.9rem;line-height:1.7;margin-bottom:1rem">MIA genera campa&ntilde;as WhatsApp en dos momentos: <strong>Proactivas (Outbound)</strong> sin interacci&oacute;n reciente del usuario, y <strong>Post-Lead</strong> despu&eacute;s de que el usuario dej&oacute; datos en Zoho CRM. Todas las campa&ntilde;as pasan por un proceso de validaci&oacute;n (IAValida) antes del env&iacute;o.</p>
+<div style="background:linear-gradient(135deg,#e8f5e9,#e0f2f1);border-radius:12px;padding:1.2rem;margin-bottom:1.5rem;border:1px solid rgba(0,166,81,.2)">
+<div style="display:flex;flex-wrap:wrap;gap:1rem;justify-content:center">
+<div style="background:#fff;border-radius:8px;padding:.8rem 1.2rem;text-align:center;min-width:100px;box-shadow:0 2px 8px rgba(0,0,0,.06)"><div style="font-size:1.5rem;font-weight:700;color:#2e7d32">128</div><div style="font-size:.7rem;color:#666;text-transform:uppercase">Templates MIA</div></div>
+<div style="background:#fff;border-radius:8px;padding:.8rem 1.2rem;text-align:center;min-width:100px;box-shadow:0 2px 8px rgba(0,0,0,.06)"><div style="font-size:1.5rem;font-weight:700;color:#1565c0">5</div><div style="font-size:.7rem;color:#666;text-transform:uppercase">Triggers</div></div>
+<div style="background:#fff;border-radius:8px;padding:.8rem 1.2rem;text-align:center;min-width:100px;box-shadow:0 2px 8px rgba(0,0,0,.06)"><div style="font-size:1.5rem;font-weight:700;color:#e65100">7</div><div style="font-size:.7rem;color:#666;text-transform:uppercase">Validaciones</div></div>
+<div style="background:#fff;border-radius:8px;padding:.8rem 1.2rem;text-align:center;min-width:100px;box-shadow:0 2px 8px rgba(0,0,0,.06)"><div style="font-size:1.5rem;font-weight:700;color:#7b1fa2">12</div><div style="font-size:.7rem;color:#666;text-transform:uppercase">Categor&iacute;as</div></div>
+<div style="background:#fff;border-radius:8px;padding:.8rem 1.2rem;text-align:center;min-width:100px;box-shadow:0 2px 8px rgba(0,0,0,.06)"><div style="font-size:1.5rem;font-weight:700;color:#00897b">6</div><div style="font-size:.7rem;color:#666;text-transform:uppercase">Agentes Outbound</div></div>
+</div></div>
+</div>
+
+<div class="card"><h2>Flujo General de Campa&ntilde;as</h2>
+<div class="flow-block">[TRIGGER] ──▶ [VALIDACI&Oacute;N IAValida] ──▶ [SELECCI&Oacute;N TEMPLATE] ──▶ [ENV&Iacute;O Infobip] ──▶ [RESPUESTA USUARIO] ──▶ [CONVERSACI&Oacute;N MIA]
+     │                                                                                                              │
+     └──────────────────────────────────── Ciclo reinicia si se genera nuevo lead ◀─────────────────────────────────┘</div>
+</div>
+
+<div class="card"><h2>Triggers (Or&iacute;genes de Campa&ntilde;a)</h2>
+<div class="grid-cards">
+<div class="grid-card" style="border-left-color:#2e7d32"><h4>&#128190; Lead guardado en Zoho CRM</h4><p><strong>Tipo:</strong> Post-Lead<br>Usuario dej&oacute; datos v&iacute;a <code>save_lead_to_zoho</code>. Se activa seguimiento autom&aacute;tico.</p></div>
+<div class="grid-card" style="border-left-color:#1565c0"><h4>&#128179; Preaprobado Davivienda</h4><p><strong>Tipo:</strong> Proactiva<br>Datos financieros del cliente disponibles. Contacto directo con oferta inmobiliaria.</p></div>
+<div class="grid-card" style="border-left-color:#e65100"><h4>&#9200; Lead sin respuesta</h4><p><strong>Tipo:</strong> Post-Lead<br>Seguimiento temporal autom&aacute;tico a 2, 7, 30 y 60 d&iacute;as sin respuesta.</p></div>
+<div class="grid-card" style="border-left-color:#7b1fa2"><h4>&#128227; Campa&ntilde;a masiva programada</h4><p><strong>Tipo:</strong> Proactiva<br>Impulso comercial, cr&eacute;dito, colocaci&oacute;n. Segmentaci&oacute;n por perfil.</p></div>
+<div class="grid-card" style="border-left-color:#c62828"><h4>&#127760; Usuario desde buscadores</h4><p><strong>Tipo:</strong> Proactiva<br>Contactabilidad de leads captados por Google/Meta Ads.</p></div>
+</div></div>
+
+<div class="card"><h2>Validaci&oacute;n de Campa&ntilde;a (IAValida) &mdash; 7 Reglas</h2>
+<p style="font-size:.85rem;color:var(--cc-gray-600);margin-bottom:1rem">Antes de enviar cualquier campa&ntilde;a, IAValida verifica estas reglas. Si alguna falla, el env&iacute;o se <strong>bloquea</strong>.</p>
+<div style="overflow-x:auto"><table>
+<thead><tr><th>#</th><th>Validaci&oacute;n</th><th>Criterio</th><th>Si falla</th></tr></thead>
+<tbody>
+<tr><td>1</td><td><strong>Ventana 24h</strong></td><td>&iquest;El usuario escribi&oacute; en las &uacute;ltimas 24h?</td><td>Si S&Iacute; &rarr; mensaje libre. Si NO &rarr; solo templates aprobados.</td></tr>
+<tr><td>2</td><td><strong>Template aprobado</strong></td><td>&iquest;El template tiene status APPROVED en Meta?</td><td><span style="color:#c62828;font-weight:600">BLOQUEAR</span> &mdash; No usar templates pendientes o rechazados.</td></tr>
+<tr><td>3</td><td><strong>Opt-in del usuario</strong></td><td>&iquest;El usuario acept&oacute; recibir comunicaciones?</td><td><span style="color:#c62828;font-weight:600">BLOQUEAR</span> &mdash; Requisito legal (Habeas Data Colombia).</td></tr>
+<tr><td>4</td><td><strong>Datos completos</strong></td><td>&iquest;Tiene nombre, tel&eacute;fono y email v&aacute;lidos?</td><td><span style="color:#c62828;font-weight:600">BLOQUEAR</span> &mdash; No enviar a datos incompletos.</td></tr>
+<tr><td>5</td><td><strong>Segmentaci&oacute;n correcta</strong></td><td>&iquest;Template corresponde al perfil (ciudad, tipo, presupuesto)?</td><td><span style="color:#c62828;font-weight:600">BLOQUEAR</span> &mdash; No enviar venta a quien busca arriendo.</td></tr>
+<tr><td>6</td><td><strong>Frecuencia de contacto</strong></td><td>&iquest;Se contact&oacute; al usuario en las &uacute;ltimas 48h?</td><td><span style="color:#c62828;font-weight:600">BLOQUEAR</span> &mdash; Evitar spam y degradaci&oacute;n quality score.</td></tr>
+<tr><td>7</td><td><strong>Quality score sender</strong></td><td>&iquest;El sender tiene quality HIGH?</td><td><span style="color:#e65100;font-weight:600">REDUCIR</span> volumen si baja a MEDIUM/LOW.</td></tr>
+</tbody></table></div>
+<h3 style="margin-top:1.2rem">Reglas adicionales de negocio</h3>
+<ul class="rules-list">
+<li><strong>Horarios:</strong> Lun-Vie 8am-7pm, S&aacute;b 8am-1pm. No enviar domingos ni festivos.</li>
+<li><strong>Frecuencia:</strong> M&aacute;ximo 1 campa&ntilde;a por usuario cada 48h (salvo respuesta activa).</li>
+<li><strong>Carruseles:</strong> Solo si hay &ge;3 inmuebles que coincidan con el perfil del usuario.</li>
+<li><strong>Cr&eacute;dito:</strong> Solo a usuarios con preaprobado confirmado por Davivienda.</li>
+<li><strong>Reactivaci&oacute;n:</strong> M&aacute;ximo 3 intentos (2, 7, 30 d&iacute;as). Despu&eacute;s &rarr; descarte autom&aacute;tico.</li>
+</ul>
+</div>
+
+<div class="card"><h2>Selecci&oacute;n de Template por Trigger</h2>
+<div style="overflow-x:auto"><table>
+<thead><tr><th>Trigger</th><th>Templates</th><th>Cant.</th><th>Criterio de selecci&oacute;n</th></tr></thead>
+<tbody>
+<tr><td>Lead guardado (post-b&uacute;squeda)</td><td><code>mia_realestate_carousel_*</code>, <code>mia_with_carousel_*</code></td><td>~40</td><td>Seg&uacute;n tipo inmueble y ciudad del lead</td></tr>
+<tr><td>Preaprobado Davivienda</td><td><code>mia_vendedora_v1</code>, <code>reenvio_mia_vendedora_*</code></td><td>~5</td><td>Seg&uacute;n monto preaprobado y ciudad</td></tr>
+<tr><td>Lead sin respuesta</td><td><code>mia_leads_rescatados</code>, <code>mia_3_leads_rescatados_carrusel_*</code></td><td>~15</td><td>Seg&uacute;n d&iacute;as sin respuesta</td></tr>
+<tr><td>Campa&ntilde;a masiva</td><td><code>camp_impulso_mia*</code>, <code>campa_mia_100k_*</code></td><td>~8</td><td>Seg&uacute;n segmento objetivo</td></tr>
+<tr><td>Auditor&iacute;a/Remates</td><td><code>mia_auditora_*</code>, <code>mia_auditoria_remates_*</code></td><td>~8</td><td>Seg&uacute;n d&iacute;as desde lead (2, 7, 30, 60)</td></tr>
+<tr><td>Cr&eacute;dito/Colocaci&oacute;n</td><td><code>mia_credito_01</code>, <code>mia_credito_100k</code></td><td>~10</td><td>Seg&uacute;n perfil financiero</td></tr>
+<tr><td>Buscadores</td><td><code>buscadores_mia_contactabilidad_leads_*</code></td><td>~4</td><td>Seg&uacute;n fuente de captaci&oacute;n</td></tr>
+<tr><td>Arriendo aliados</td><td><code>mia_arrendadora_v1</code></td><td>~5</td><td>Seg&uacute;n tipo arriendo</td></tr>
+</tbody></table></div>
+</div>
+
+<div class="card"><h2>Flujo T&eacute;cnico de Env&iacute;o</h2>
+<div class="flow-block">n8n Workflow ──▶ POST /whatsapp/1/message/template ──▶ Infobip API ──▶ Sender 573153277577 ──▶ WhatsApp Usuario
+                                                                                    │
+                                                                          Quality: HIGH
+                                                                          L&iacute;mite: UNLIMITED
+                                                                          WABA: RICHNESTT SAS</div>
+<h3>Endpoints utilizados</h3>
+<div style="overflow-x:auto"><table>
+<thead><tr><th>Endpoint</th><th>Uso</th><th>Cu&aacute;ndo</th></tr></thead>
+<tbody>
+<tr><td><code>POST /whatsapp/1/message/template</code></td><td>Env&iacute;o de template pre-aprobado</td><td>Fuera de ventana 24h (campa&ntilde;as proactivas)</td></tr>
+<tr><td><code>POST /whatsapp/1/message/text</code></td><td>Respuesta en sesi&oacute;n</td><td>Dentro de ventana 24h (conversaci&oacute;n activa)</td></tr>
+<tr><td><code>POST /whatsapp/1/message/interactive/buttons</code></td><td>Botones interactivos (m&aacute;x 3)</td><td>Dentro de ventana 24h</td></tr>
+<tr><td><code>POST /whatsapp/1/message/interactive/list</code></td><td>Listas interactivas (10&times;10)</td><td>Dentro de ventana 24h</td></tr>
+</tbody></table></div>
+</div>
+
+<div class="card"><h2>Respuesta del Usuario &mdash; Ciclo de Conversaci&oacute;n</h2>
+<p style="font-size:.85rem;color:var(--cc-gray-600);margin-bottom:1rem">Cuando el usuario responde a una campa&ntilde;a, se activa el ciclo conversacional completo:</p>
+<div style="display:flex;flex-direction:column;gap:8px;margin:1rem 0">
+<div style="display:flex;align-items:center;gap:8px"><div style="background:#2e7d32;color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0">1</div><div style="background:#e8f5e9;border-radius:8px;padding:.6rem 1rem;flex:1;font-size:.85rem"><strong>Se abre ventana 24h</strong> &mdash; MIA puede enviar mensajes libres (texto, botones, listas).</div></div>
+<div style="display:flex;align-items:center;gap:8px"><div style="background:#1565c0;color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0">2</div><div style="background:#e3f2fd;border-radius:8px;padding:.6rem 1rem;flex:1;font-size:.85rem"><strong>Webhook inbound</strong> &mdash; Infobip env&iacute;a el mensaje al Chatbot Answers (ID 4207).</div></div>
+<div style="display:flex;align-items:center;gap:8px"><div style="background:#e65100;color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0">3</div><div style="background:#fff3e0;border-radius:8px;padding:.6rem 1rem;flex:1;font-size:.85rem"><strong>Derivaci&oacute;n a MIA</strong> &mdash; Chatbot transfiere v&iacute;a webhook a n8n.</div></div>
+<div style="display:flex;align-items:center;gap:8px"><div style="background:#7b1fa2;color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0">4</div><div style="background:#f3e5f5;border-radius:8px;padding:.6rem 1rem;flex:1;font-size:.85rem"><strong>n8n orquesta</strong> &mdash; Invoca al agente LangGraph correspondiente seg&uacute;n el origen de la campa&ntilde;a.</div></div>
+<div style="display:flex;align-items:center;gap:8px"><div style="background:#00897b;color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0">5</div><div style="background:#e0f2f1;border-radius:8px;padding:.6rem 1rem;flex:1;font-size:.85rem"><strong>Conversaci&oacute;n activa</strong> &mdash; MIA interact&uacute;a con el usuario hasta generar un nuevo lead.</div></div>
+<div style="display:flex;align-items:center;gap:8px"><div style="background:#c62828;color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0">6</div><div style="background:#fce4ec;border-radius:8px;padding:.6rem 1rem;flex:1;font-size:.85rem"><strong>Nuevo lead &rarr; Zoho CRM</strong> &mdash; <code>save_lead_to_zoho</code> &rarr; El ciclo de campa&ntilde;as reinicia.</div></div>
+</div>
+</div>
+
+<div class="card"><h2>Agentes que Atienden Campa&ntilde;as</h2>
+<div style="overflow-x:auto"><table>
+<thead><tr><th>Campa&ntilde;a</th><th>Agente</th><th>Herramientas</th></tr></thead>
+<tbody>
+<tr><td>Vendedora (preaprobados)</td><td><code>mia_sales_agent</code></td><td>validate_financial_capacity, search_substitutes, save_lead_to_zoho</td></tr>
+<tr><td>Arriendo aliados</td><td><code>mia_rent_allies_agent</code></td><td>search_rent_allies_properties, save_lead_to_zoho</td></tr>
+<tr><td>Venta aliados</td><td><code>mia_sales_allies_agent</code></td><td>search_sales_allies_properties, save_lead_to_zoho</td></tr>
+<tr><td>Reactivaci&oacute;n</td><td><code>mia_outbound</code></td><td>search_properties, save_lead_to_zoho</td></tr>
+<tr><td>Leads rescatados</td><td><code>mia_outbound</code></td><td>search_properties, paginate_search</td></tr>
+<tr><td>Campa&ntilde;as impulso</td><td><code>mia_outbound</code></td><td>search_properties</td></tr>
+</tbody></table></div>
+</div>
+
+<div class="card"><h2>KPIs de Monitoreo</h2>
+<div style="overflow-x:auto"><table>
+<thead><tr><th>M&eacute;trica</th><th>Objetivo</th><th>Fuente</th></tr></thead>
+<tbody>
+<tr><td>Tasa de entrega</td><td><strong>&gt;95%</strong></td><td>Infobip Delivery Reports</td></tr>
+<tr><td>Tasa de lectura</td><td><strong>&gt;60%</strong></td><td>Infobip Seen Reports</td></tr>
+<tr><td>Tasa de respuesta</td><td><strong>&gt;15%</strong></td><td>Webhook inbound / templates enviados</td></tr>
+<tr><td>Quality score sender</td><td><strong>HIGH</strong></td><td>Infobip Dashboard</td></tr>
+<tr><td>Templates rechazados por Meta</td><td><strong>0</strong></td><td>Infobip Templates API</td></tr>
+<tr><td>Campa&ntilde;as bloqueadas por IAValida</td><td>Registrar motivo</td><td>Logs n8n</td></tr>
+<tr><td>Leads convertidos post-campa&ntilde;a</td><td>Tracking</td><td>Zoho CRM</td></tr>
+</tbody></table></div>
+</div>
+
+<div class="card"><h2>Limitaciones T&eacute;cnicas</h2>
+<div style="overflow-x:auto"><table>
+<thead><tr><th>Limitaci&oacute;n</th><th>Impacto</th><th>Mitigaci&oacute;n</th></tr></thead>
+<tbody>
+<tr><td>Ventana 24h de WhatsApp</td><td>Solo templates fuera de ventana</td><td>Usar templates aprobados para primer contacto</td></tr>
+<tr><td>Aprobaci&oacute;n Meta (24-48h)</td><td>No se pueden crear templates al vuelo</td><td>Mantener cat&aacute;logo pre-aprobado</td></tr>
+<tr><td>M&aacute;x 3 botones por mensaje</td><td>Limita opciones interactivas</td><td>Usar listas para m&aacute;s opciones</td></tr>
+<tr><td>Carousels solo cloud</td><td>No funciona con senders on-premise</td><td>Sender actual es cloud &#9989;</td></tr>
+<tr><td>Webhook respuesta r&aacute;pida (&lt;5s)</td><td>n8n debe responder r&aacute;pido</td><td>Alta disponibilidad de n8n</td></tr>
+<tr><td>Rate limiting Infobip</td><td>L&iacute;mite por cuenta/sender</td><td>Usar Broadcast API para masivos</td></tr>
+</tbody></table></div>
+</div>
+
+<div class="card"><h2>Pr&oacute;ximos Pasos &mdash; IAValida</h2>
+<ul class="pending-list">
+<li>&#9744; Implementar l&oacute;gica de validaci&oacute;n IAValida en n8n (workflow dedicado)</li>
+<li>&#9744; Crear dashboard de monitoreo de campa&ntilde;as (Datadog + Infobip)</li>
+<li>&#9744; Auditar templates activos vs inactivos (128 &rarr; cu&aacute;les se usan realmente?)</li>
+<li>&#9744; Integrar validaci&oacute;n de opt-in con base de datos de consentimientos</li>
+<li>&#9744; Definir alertas para degradaci&oacute;n de quality score del sender</li>
+<li>&#9744; Documentar reglas de frecuencia de contacto por segmento</li>
+</ul>
+</div>
+</div>
 <div class="tab-panel" id="pendientes"><div class="card"><h2>Pendientes y Proximos Pasos</h2><ul class="pending-list">
 <li>&#9989; <s>Identificar proyecto Jira asociado a MIA</s> &mdash; Proyecto MIA, 2848+ issues</li>
 <li>&#9989; <s>Identificar equipo/squad que mantiene MIA</s> &mdash; 5 personas core + soporte</li>
@@ -843,6 +1069,66 @@ footer a{color:var(--cc-green);text-decoration:none;font-weight:500}
 </div>
 <footer><strong style="color:var(--cc-green)">ciencuadras</strong> &mdash; MIA Agente IA &mdash; Servicios Bol&iacute;var S.A. | Actualizado: Mayo 2026 | Plataforma: Langfuse + LangGraph | Modelo: Google Gemini | Jira: MIA (2848+ issues)</footer>
 <script>
-document.addEventListener('DOMContentLoaded',function(){var tabs=document.querySelectorAll('.tab-btn');var panels=document.querySelectorAll('.tab-panel');tabs.forEach(function(tab){tab.addEventListener('click',function(){tabs.forEach(function(t){t.classList.remove('active')});panels.forEach(function(p){p.classList.remove('active')});tab.classList.add('active');document.getElementById(tab.dataset.tab).classList.add('active')})})});
+document.addEventListener('DOMContentLoaded',function(){
+var tabs=document.querySelectorAll('.tab-btn');
+var panels=document.querySelectorAll('.tab-panel');
+var hamburger=document.getElementById('hamburgerBtn');
+var overlay=document.getElementById('navOverlay');
+var drawer=document.getElementById('navDrawer');
+var navLinks=document.querySelectorAll('.nav-drawer a[data-nav]');
+
+function switchTab(tabId){
+tabs.forEach(function(t){t.classList.remove('active')});
+panels.forEach(function(p){p.classList.remove('active')});
+var targetBtn=document.querySelector('.tab-btn[data-tab="'+tabId+'"]');
+if(targetBtn)targetBtn.classList.add('active');
+var targetPanel=document.getElementById(tabId);
+if(targetPanel)targetPanel.classList.add('active');
+navLinks.forEach(function(l){l.classList.remove('active')});
+var activeNav=document.querySelector('.nav-drawer a[data-nav="'+tabId+'"]');
+if(activeNav){
+activeNav.classList.add('active');
+var parentDetails=activeNav.closest('details.nav-group');
+if(parentDetails)parentDetails.setAttribute('open','');
+}
+}
+
+tabs.forEach(function(tab){
+tab.addEventListener('click',function(){switchTab(tab.dataset.tab)});
+});
+
+function toggleDrawer(){
+hamburger.classList.toggle('active');
+drawer.classList.toggle('active');
+overlay.classList.toggle('active');
+document.body.style.overflow=drawer.classList.contains('active')?'hidden':'';
+}
+
+function closeDrawer(){
+hamburger.classList.remove('active');
+drawer.classList.remove('active');
+overlay.classList.remove('active');
+document.body.style.overflow='';
+}
+
+hamburger.addEventListener('click',toggleDrawer);
+overlay.addEventListener('click',closeDrawer);
+
+navLinks.forEach(function(link){
+link.addEventListener('click',function(e){
+e.preventDefault();
+var tabId=this.dataset.nav;
+switchTab(tabId);
+closeDrawer();
+document.querySelector('.tabs-container').scrollIntoView({behavior:'smooth'});
+});
+});
+
+var activeTab=document.querySelector('.tab-btn.active');
+if(activeTab){
+var activeNav=document.querySelector('.nav-drawer a[data-nav="'+activeTab.dataset.tab+'"]');
+if(activeNav)activeNav.classList.add('active');
+}
+});
 </script>
 </body></html>
